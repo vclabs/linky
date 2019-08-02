@@ -1,5 +1,6 @@
 from lib import logger, naming_scheme, word_occurrence, http
 import json, math, re, time
+from time import sleep
 
 def get_company_profile(cookie,company_id,keyword):
 	if keyword == None:
@@ -150,6 +151,8 @@ def run(data,domain,filename,keyword):
 
 	if results > 1000:
 		logger.red('This method of enumeration can only extract 1000 users')
+
+	sleep(3)
 
 	users=user_data(results,pages,cookie,company_id,domain,email_format)
 	job_role_count=word_occurrence.count(users)

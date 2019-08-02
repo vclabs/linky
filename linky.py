@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 from lib import logger,user_enum, banner
 import argparse, os.path, json
-from time import sleep
-
 '''
 
 Linky is a LinkedIn Enumerator.
@@ -64,7 +62,6 @@ if args.domain == None:
 	quit()
 connection_data=[cookie,company_id,email_format]
 try:
-	sleep(2)
 	users=user_enum.run(connection_data,domain,filename,keyword)
 except KeyboardInterrupt:
 	logger.yellow('Keyboard interrupt detected!')
