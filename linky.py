@@ -12,7 +12,7 @@ Inspired by @vysecurity.
 # The most important part...
 banner.banner()
 
-parser = argparse.ArgumentParser(description="Yet another LinkedIn scraper.")
+parser = argparse.ArgumentParser(description="Yet another LinkedIn scraper.",epilog="Example: python3 --cookie cookie.txt --company-id 1441 --domain google.com --output google_employees --format 'firstname.surname'")
 parser.add_argument("-c", "--cookie", required=True, metavar="", help="Cookie to authenticate to LinkedIn with [li_at]")
 parser.add_argument("-i", "--company-id", metavar="", help="Company ID number")
 parser.add_argument("-k", "--keyword", metavar="", help="Keyword for searches")
