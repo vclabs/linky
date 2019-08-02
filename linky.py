@@ -9,17 +9,28 @@ Inspired by @vysecurity.
 
 '''
 
-# The most important part...
-banner.banner()
-
 parser = argparse.ArgumentParser(description="Yet another LinkedIn scraper.",epilog="Example: python3 --cookie cookie.txt --company-id 1441 --domain google.com --output google_employees --format 'firstname.surname'")
-parser.add_argument("-c", "--cookie", required=True, metavar="", help="Cookie to authenticate to LinkedIn with [li_at]")
+mutually_exclusive = parser.add_mutually_exclusive_group()
+parser.add_argument("-c", "--cookie", metavar="", help="Cookie to authenticate to LinkedIn with [li_at]")
 parser.add_argument("-i", "--company-id", metavar="", help="Company ID number")
 parser.add_argument("-k", "--keyword", metavar="", help="Keyword for searches")
 parser.add_argument("-d", "--domain", metavar="", help="Company domain name")
 parser.add_argument("-o", "--output", metavar="", help="File to output to: Writes CSV, JSON and HTML.")
 parser.add_argument("-f", "--format", metavar="", help="Format for email addresses")
+parser.add_argument("-v", "--validate", metavar="", help="Validate email addresses: O365/Hunter API")
+mutually_exclusive.add_argument("-V", "--version", action="store_true",help="Print current version")
 args = parser.parse_args()
+
+if args.version:
+	banner.banner()
+	quit()
+
+# The most important part...
+banner.banner()
+
+if args.cookie == None:
+	logger.red('Please specify a file containing the %s cookie.' % logger.RED('li_at'))
+	quit()
 
 try:
 	with open(args.cookie,'r') as f:
@@ -55,14 +66,32 @@ else:
 	email_format='firstname.surname'
 
 if args.company_id == None:
-	logger.red('Please specify a company id with the %s flag' % logger.RED('-id'))
+	logger.red('Please specify a company id with the %s flag' % logger.RED('-i'))
 	quit()
 if args.domain == None:
 	logger.red('Please specify a domain with the %s flag' % logger.RED('-d'))
 	quit()
+
+if args.validate:
+	if args.validate.lower() == 'o365':
+		logger.blue('Validating users via %s' % logger.BLUE('Office365'))
+		validation = 'o365'
+	elif args.validate.lower() == 'hunter':
+		# logger.blue('Validating users via %s' % logger.BLUE('Hunter'))
+		logger.yellow('Validating users via the Hunter API is not implemented just yet...')
+		quit()
+		validation = 'hunter'
+	else:
+		logger.red('Unknown validation type: ' + logger.RED(args.validate))
+		logger.red('Please specify either %s or %s' % (logger.RED('o365'),logger.RED('hunter')))
+		quit()
+else:
+	validation = None
+
 connection_data=[cookie,company_id,email_format]
+
 try:
-	users=user_enum.run(connection_data,domain,filename,keyword)
+	users=user_enum.run(connection_data,domain,filename,keyword,validation)
 except KeyboardInterrupt:
 	logger.yellow('Keyboard interrupt detected!')
 	quit()

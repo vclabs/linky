@@ -43,40 +43,45 @@ def yellow(string):
 	log_time=strftime("%d/%m/%y, %H:%M:%S", gmtime())
 	print('['+log_time+']'+YELLOW(' >> ' )+string)
 
-def write_out(data,domain,word_occurrence,filename):
+def write_out(data,domain,word_occurrence,filename,validation):
 	if filename == None:
 		return
-	write_html(data,domain,word_occurrence,filename)
-	write_csv(data,domain,word_occurrence,filename)
-	write_json(data,domain,word_occurrence,filename)
+	write_html(data,domain,word_occurrence,filename,validation)
+	write_csv(data,filename,validation)
+	write_json(data,filename)
 
-def write_csv(data,domain,word_occurrence,filename):
+def write_csv(data,filename,validation):
 	filename=filename+'.csv'
-	headers=['picture','fullname','firstname','middlename','surname','email','current role','current company']
+	if validation != None:
+		headers=['picture','fullname','firstname','middlename','surname','email','validated','current role','current company']
+	else:
+		headers=['picture','fullname','firstname','middlename','surname','email','current role','current company']
+
 	with open(filename,'w') as f:
 		writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-		writer.writerow(['fullname','firstname','middlename','surname','email','current role','current company'])
+		writer.writerow(headers)
 		for d in data:
 			for k,v in d.items():
 				fullname=k
 				profile_url=v[0]
-				picture=v[1]
-				if picture == None:
-					picture=cur_dir+'/html/src/blank.jpg'
 				firstname=v[2]
 				middlename=v[3]
 				surname=v[4]
 				email=v[5]
 				current_role=v[6]
 				current_company=v[7]
-				writer.writerow([fullname,firstname,middlename,surname,email,current_role,current_company,profile_url])
+				if validation != None:
+					validated=v[8]
+					writer.writerow([fullname,firstname,middlename,surname,email,validated,current_role,current_company,profile_url])
+				else:
+					writer.writerow([fullname,firstname,middlename,surname,email,current_role,current_company,profile_url])
 
-def write_json(data,domain,word_occurrence,filename):
+def write_json(data,filename):
 	filename=filename+'.json'
 	with open(filename,'w') as f:
 		json.dump(data,f)
 
-def write_html(data,domain,word_occurrence,filename):
+def write_html(data,domain,word_occurrence,filename,validation):
 	user_counter=0
 	for d in data:
 		for k,v in d.items():
@@ -85,8 +90,11 @@ def write_html(data,domain,word_occurrence,filename):
 	with open(filename,'w') as f:
 		title='Linky: % s' % domain
 		f.write(html.header(title))
-		headers=['picture','fullname','firstname','middlename','surname','email','current role','current company']
-		f.write(html.h3_span(['Users',user_counter]))
+		if validation != None:
+			headers=['picture','fullname','firstname','middlename','surname','email','email validation','current role','current company']
+		else:
+			headers=['picture','fullname','firstname','middlename','surname','email','current role','current company']
+		f.write(html.h3_span(['User Count',user_counter]))
 		f.write(html.p('Click the users image to view their LinkedIn!'))
 		f.write(html.table_head(headers))
 		for d in data:
@@ -109,6 +117,19 @@ def write_html(data,domain,word_occurrence,filename):
 				f.write(html.table_entry(middlename))
 				f.write(html.table_entry(surname))
 				f.write(html.table_entry(email))
+				if validation != None:
+					validated=v[8]
+					if validated == None:
+						f.write(html.table_entry('Unable to validate'))
+					else:
+						if validated == True:
+							try:
+								f.write(html.table_entry('Got creds: %s') % validated[1])
+							except:
+								f.write(html.table_entry(str(validated)))
+						else:
+							f.write(html.table_entry(str(validated)))
+
 				f.write(html.table_entry(current_role))
 				f.write(html.table_entry(current_company))
 				f.write('</tr>\n')

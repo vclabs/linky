@@ -91,5 +91,5 @@ def h3(string):
 	return '<h3>%s</h3>' % string
 
 def h3_span(strings):
-	return '<h3><span>%s: [%s]</span></h3>' % (strings[0],strings[1])
+	return '<h3><span>%s: %s</span></h3>' % (strings[0],strings[1])
 	

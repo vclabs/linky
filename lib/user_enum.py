@@ -1,4 +1,4 @@
-from lib import logger, naming_scheme, word_occurrence, http
+from lib import logger, naming_scheme, word_occurrence, http, o365_validation
 import json, math, re, time
 from time import sleep
 
@@ -13,8 +13,13 @@ def get_company_profile(cookie,company_id,keyword):
 		quit()
 	return data.text
 
-def extract_data(data,domain,email_format):
-	domain='@'+domain
+def extract_data(data,domain,email_format,validation):
+
+	if domain.startswith('@'):
+		domain=domain
+	else:
+		domain='@'+domain
+
 	collected_data={}
 	for d in data['elements'][0]['elements']:
 		if 'com.linkedin.voyager.search.SearchProfile' in d['hitInfo'] and d['hitInfo']['com.linkedin.voyager.search.SearchProfile']['headless'] == False:
@@ -81,10 +86,20 @@ def extract_data(data,domain,email_format):
 				logger.green('Found %s [%s]' % (logger.GREEN(fullname),logger.GREEN(email)))
 				userinfo=[profile_url,picture,firstname,middlename,surname,email,current_role,'Error']
 
+
+			if validation != None:
+				if validation == 'o365':
+					validated=o365_validation.validate(email)
+					userinfo.append(validated)
+				elif validation == 'hunter':
+					logger.red('Hunter API Validation not implemented yet.')
+					quit()
+
 			collected_data[fullname]=userinfo
+
 	return collected_data
 
-def user_data(results,pages,cookie,company_id,domain,email_format):
+def user_data(results,pages,cookie,company_id,domain,email_format,validation):
 	# Every page returns a dictionary of data, each dictionary is added to this list.
 
 	users_per_page=[]
@@ -122,13 +137,13 @@ def user_data(results,pages,cookie,company_id,domain,email_format):
 			logger.red(e)
 			quit()
 
-		users=extract_data(result,domain,email_format)
+		users=extract_data(result,domain,email_format,validation)
 
 		users_per_page.append(users)
 
 	return users_per_page
 
-def run(data,domain,filename,keyword):
+def run(data,domain,filename,keyword,validation):
 	cookie=data[0]
 	company_id=data[1]
 	email_format=data[2]
@@ -152,11 +167,12 @@ def run(data,domain,filename,keyword):
 	if results > 1000:
 		logger.red('This method of enumeration can only extract 1000 users')
 
-	sleep(3)
+	# sleep(3)
 
-	users=user_data(results,pages,cookie,company_id,domain,email_format)
+	users=user_data(results,pages,cookie,company_id,domain,email_format,validation)
 	job_role_count=word_occurrence.count(users)
-	logger.write_out(users,domain,job_role_count,filename)
+
+	logger.write_out(users,domain,job_role_count,filename,validation)
 	
 	return users
 	
