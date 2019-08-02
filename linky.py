@@ -25,11 +25,11 @@ args = parser.parse_args()
 
 try:
 	with open(args.cookie,'r') as f:
-		cookie=f.readline()
-		logger.blue('Got cookie: [%s]' % logger.BLUE(cookie))
+		cookie=f.readline().rstrip()
+		logger.green('Got cookie: [%s]' % logger.GREEN(cookie))
 except:
-	logger.blue('Got cookie: [%s]' % logger.BLUE(cookie))
-	cookie=args.cookie
+	logger.red('Please add the cookie to a file')
+	quit()
 
 company_id=args.company_id
 
