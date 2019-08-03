@@ -1,3 +1,4 @@
+
 import requests,  json, csv, argparse
 from time import  sleep
 from time import gmtime, strftime
@@ -16,14 +17,14 @@ def validate(email,api_key):
 	try:
 		data=json.loads(r.content)
 	except Exception as e:
-		logger.red(e)
+		logger.red('Failed to load JSON from requests')
 		quit()
 
-	if status_code == 429 or 401:
+	if status_code == 429 or status_code == 401:
 		try:
 			result=data['errors'][0]['details']
 		except Exception as e:
-			logger.red(e)
+			logger.red('Failed to load JSON from errors')
 			quit()
 
 		if 'exceeded' in result:
@@ -31,18 +32,20 @@ def validate(email,api_key):
 	
 		elif 'No user found for the API key supplied' in result:
 			return 401
+	elif status_code == 200:
+		try:
+			result=data['data']['result']
+			score=data['data']['score']
+		except Exception as e:
+			logger.red('Unable to extract json for %s' % email)
+			quit()
 
-	try:
-		result=data['data']['result']
-		score=data['data']['score']
-	except Exception as e:
-		logger.red('Unable to extract json for %s' % email)
-		quit()
+		percent=str(score)+'%'
 
-	percent=str(score)+'%'
-
-	if score > 68:
-		logger.green('%s, %s accurate' % (percent,email))
-		return True
+		if score > 68:
+			logger.green('Validated %s at %s' % (logger.GREEN(email),logger.GREEN(percent)))
+			return True
+		else:
+			return False
 	else:
-		return False
+		logger.red('Got unexpected HTTP response' % logger.RED(str(status_code)))

@@ -5,7 +5,7 @@ import argparse, os.path, json
 
 Linky is a LinkedIn Enumerator.
 
-Inspired by @vysecurity.
+Inspired by @vysecurity, built my @mez0cc.
 
 '''
 
