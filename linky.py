@@ -18,6 +18,7 @@ parser.add_argument("-d", "--domain", metavar="", help="Company domain name")
 parser.add_argument("-o", "--output", metavar="", help="File to output to: Writes CSV, JSON and HTML.")
 parser.add_argument("-f", "--format", metavar="", help="Format for email addresses")
 parser.add_argument("-v", "--validate", metavar="", help="Validate email addresses: O365/Hunter API")
+parser.add_argument("-a", "--api", metavar="", help="API Key for Hunter API")
 mutually_exclusive.add_argument("-V", "--version", action="store_true",help="Print current version")
 args = parser.parse_args()
 
@@ -77,10 +78,14 @@ if args.validate:
 		logger.blue('Validating users via %s' % logger.BLUE('Office365'))
 		validation = 'o365'
 	elif args.validate.lower() == 'hunter':
-		# logger.blue('Validating users via %s' % logger.BLUE('Hunter'))
-		logger.yellow('Validating users via the Hunter API is not implemented just yet...')
-		quit()
+		if args.api == None:
+			logger.red('If validating through Hunter, the API Key is required (%s).' % logger.RED('--api'))
+			quit()
+		else:
+			api_key = args.api
+		logger.blue('Validating users via %s' % logger.BLUE('Hunter'))
 		validation = 'hunter'
+
 	else:
 		logger.red('Unknown validation type: ' + logger.RED(args.validate))
 		logger.red('Please specify either %s or %s' % (logger.RED('o365'),logger.RED('hunter')))
@@ -91,7 +96,7 @@ else:
 connection_data=[cookie,company_id,email_format]
 
 try:
-	users=user_enum.run(connection_data,domain,filename,keyword,validation)
+	users=user_enum.run(connection_data,domain,filename,keyword,validation,api_key)
 except KeyboardInterrupt:
 	logger.yellow('Keyboard interrupt detected!')
 	quit()
