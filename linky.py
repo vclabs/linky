@@ -9,7 +9,7 @@ Inspired by @vysecurity.
 
 '''
 
-parser = argparse.ArgumentParser(description="Yet another LinkedIn scraper.",epilog="Example: python3 --cookie cookie.txt --company-id 1441 --domain google.com --output google_employees --format 'firstname.surname'")
+parser = argparse.ArgumentParser(description="Yet another LinkedIn scraper.",epilog="Example: python3 linky.py --cookie cookie.txt --company-id 1441 --domain google.com --output google_employees --format 'firstname.surname'")
 mutually_exclusive = parser.add_mutually_exclusive_group()
 parser.add_argument("-c", "--cookie", metavar="", help="Cookie to authenticate to LinkedIn with [li_at]")
 parser.add_argument("-i", "--company-id", metavar="", help="Company ID number")
