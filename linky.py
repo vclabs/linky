@@ -77,6 +77,7 @@ if args.validate:
 	if args.validate.lower() == 'o365':
 		logger.blue('Validating users via %s' % logger.BLUE('Office365'))
 		validation = 'o365'
+		api_key = None
 	elif args.validate.lower() == 'hunter':
 		if args.api == None:
 			logger.red('If validating through Hunter, the API Key is required (%s).' % logger.RED('--api'))
@@ -92,6 +93,7 @@ if args.validate:
 		quit()
 else:
 	validation = None
+	api_key = None
 
 connection_data=[cookie,company_id,email_format]
 
