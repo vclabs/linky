@@ -31,30 +31,28 @@ Help Page
 ========
 
 ```
-
- ▄█        ▄█  ███▄▄▄▄      ▄█   ▄█▄ ▄██   ▄   
-███       ███  ███▀▀▀██▄   ███ ▄███▀ ███   ██▄ 
-███       ███▌ ███   ███   ███▐██▀   ███▄▄▄███ 
-███       ███▌ ███   ███  ▄█████▀    ▀▀▀▀▀▀███ 
-███       ███▌ ███   ███ ▀▀█████▄    ▄██   ███ 
-███       ███  ███   ███   ███▐██▄   ███   ███ 
-███▌    ▄ ███  ███   ███   ███ ▀███▄ ███   ███  @mez0cc
-█████▄▄██ █▀    ▀█   █▀    ███   ▀█▀  ▀█████▀   0.1
-▀                          ▀                   
-	<<<Yet another LinkedIn scraper>>>
-
-usage: linky.py [-h] -c  [-i] [-k] [-d] [-o] [-f]
+usage: linky.py [-h] [-c] [-i] [-k] [-d] [-o] [-f] [-v] [-a] [--verbose]
+                [--debug] [--list-email-schemes | --version]
 
 Yet another LinkedIn scraper.
 
 optional arguments:
-  -h, --help          show this help message and exit
-  -c , --cookie       Cookie to authenticate to LinkedIn with [li_at]
-  -i , --company-id   Company ID number
-  -k , --keyword      Keyword for searches
-  -d , --domain       Company domain name
-  -o , --output       File to output to: Writes CSV, JSON and HTML.
-  -f , --format       Format for email addresses
+  -h, --help            show this help message and exit
+  -c , --cookie         Cookie to authenticate to LinkedIn with [li_at]
+  -i , --company-id     Company ID number
+  -k , --keyword        Keyword for searches
+  -d , --domain         Company domain name
+  -o , --output         File to output to: Writes CSV, JSON and HTML.
+  -f , --format         Format for email addresses
+  -v , --validate       Validate email addresses: O365/Hunter API
+  -a , --api            API Key for Hunter API
+  --verbose             Verbosity of the output
+  --debug               Enable debugging, will spam.
+  --list-email-schemes  List available email schemes
+  --version             Print current version
+
+Example: python3 linky.py --cookie cookie.txt --company-id 1441 --domain
+google.com --output google_employees --format 'firstname.surname'
 
 ```
 
@@ -72,17 +70,19 @@ Usage
 Supported email formats
 ========================
 
-Currently, there is  no support for middle names but its on the to-do list. Here are the current naming schemes:
+Run `linky.py --list-email-schemes` to see all current formats:
 
 ```
-firstname.surname
-f.surname
-firstnamesurname
-fsurname
-surname.firstname
-s.firstname
-surnamefirstname
-sfirstname
+firstname.surname:john.doe
+firstnamesurname:johndoe
+f.surname:j.doe
+fsurname:jdoe
+surname.firstname:doe.john
+surnamefirstname:doejohn
+s.firstname:d.john
+sfirstname:djohn
+firstname.msurname:john.jdoe
+
 ```
 They can all be referenced in ```--format```, E.G:
 
