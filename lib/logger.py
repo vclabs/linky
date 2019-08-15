@@ -6,11 +6,13 @@ import os
 
 colour_red = "\033[1;31m"
 colour_blue = "\033[1;34m"
-colour_green = "\033[1;32m"
 colour_yellow = "\033[1;33m"
+colour_green = "\033[1;32m"
+colour_magenta = "\033[1;35m"
 colour_remove= "\033[0m"
 cur_dir=os.path.dirname(os.path.abspath(__file__))
 verbose_switch = False
+debug_switch = False
 
 def RED(string):
 	string=str(string)
@@ -20,18 +22,31 @@ def BLUE(string):
 	string=str(string)
 	return (colour_blue + string + colour_remove)
 
+def YELLOW(string):
+	string=str(string)
+	return (colour_yellow + string + colour_remove)
+
 def GREEN(string):
 	string=str(string)
 	return (colour_green + string + colour_remove)
 
-def YELLOW(string):
+def MAGENTA(string):
 	string=str(string)
-	return (colour_yellow + string + colour_remove)
+	return (colour_magenta + string + colour_remove)
+
+def MAGENTABG(string):
+	string=str(string)
+	return (colour_magentabg + string + colour_remove)
 
 def verbose(string):
 	if verbose_switch == True:
 		log_time=strftime("%d/%m/%y, %H:%M:%S", gmtime())
 		print('['+log_time+']'+YELLOW(' >> ' )+string)
+
+def debug(string):
+	if debug_switch == True:
+		log_time=strftime("%d/%m/%y, %H:%M:%S", gmtime())
+		print('['+(log_time)+']'+MAGENTA(' DEBUG >> ' )+string)
 
 def blue(string):
 	log_time=strftime("%d/%m/%y, %H:%M:%S", gmtime())

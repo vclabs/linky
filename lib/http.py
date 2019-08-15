@@ -5,6 +5,9 @@ def connect(url,cookie):
 	cookies={'li_at': cookie, 'JSESSIONID': 'ajax:0397788525211216808'}
 	headers={'Csrf-Token': 'ajax:0397788525211216808', 'X-RestLi-Protocol-Version': '2.0.0'}
 
+	logger.debug(str(cookies))
+	logger.debug(str(headers))
+
 	try:
 		r=requests.get(url, headers=headers,cookies=cookies)
 		data=r.text
@@ -13,8 +16,7 @@ def connect(url,cookie):
 			return None
 		return r
 	except Exception as e:
-		error=str(e)
-		logger.red(error)
+		print(e)
 		logger.red('Check the cookie and make sure its correct!')
 		return None
 		

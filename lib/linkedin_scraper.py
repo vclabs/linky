@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 from lib import http, logger, naming_scheme, user_structure, o365_validation, hunter_validation
 import json
 
@@ -7,8 +6,10 @@ def company_profile(cookie,company_id,keyword):
 	# This function requests the companies profile and returns the data
 	if keyword == None:
 		url='https://www.linkedin.com/voyager/api/search/cluster?count=40&guides=List(v->PEOPLE,facetCurrentCompany->%s)&origin=OTHER&q=guided&start=0' % company_id
+		logger.debug('Requesting %s from company_profile()' % url)
 	else:
 		url = "https://www.linkedin.com/voyager/api/search/cluster?count=40&guides=List(v->PEOPLE,facetCurrentCompany->%s)&keywords=%s&origin=OTHER&q=guided&start=0" % (company_id,keyword)
+		logger.debug('Requesting %s from company_profile()' % url)
 	data=http.connect(url,cookie)
 	if data == None:
 		logger.red('Unable to authenticate to LinkedIn')
@@ -27,19 +28,24 @@ def get_users(data,pages,total_employees):
 	# Every page returns a dictionary of data, each dictionary is added to this list.
 	people_on_this_page=0
 
+	logger.debug(str(vars(data)))
+
 	userdata_per_page = []
 
 	for page in range(0,pages+1):
 
 		if page+1 == 25:
+			logger.debug('Breaking, pages exceed 25')
 			break
 
 		if total_employees < 40:
+			logger.debug('Locking users per page to match total_employees')
 			# This method pulls 40 total_employees per page. If the available total_employees is less then 40
 			# Set total_employees_per_age to whatever the number is
 			total_employees_per_page = total_employees
 			total_employees_to_fetch = total_employees
 		else:
+			logger.debug('Locking users per page to 40')
 			# However, if the amount of available total_employees is higher than the per page limit, set the per page limit to the max (40)
 			total_employees_per_page = 40
 
@@ -52,6 +58,7 @@ def get_users(data,pages,total_employees):
 			break
 
 		url="https://www.linkedin.com/voyager/api/search/cluster?count=40&guides=List(v->PEOPLE,facetCurrentCompany->%s)&origin=OTHER&q=guided&start=%s" % (company_id,total_employees_to_fetch)
+		logger.debug('Requesting %s from get_users()' % url)
 		logger.blue('Pulling from page %s' % logger.BLUE(page+1))
 			
 		api_response=http.connect(url,cookie)
@@ -65,11 +72,12 @@ def get_users(data,pages,total_employees):
 
 		people_on_this_page=people_on_this_page+len(result['elements'][0]['elements'])
 		if people_on_this_page > 0:
-			logger.green('Successfully pulled %s' % logger.GREEN(str(people_on_this_page)))
+			logger.green('Successfully pulled %s users' % logger.GREEN(str(people_on_this_page)))
 		userdata_per_page.append(result)
 
 	# This part could do with threading
 	users = parse_users(data,userdata_per_page)
+	logger.debug('Sending list of json objects to parse_users()')
 	return users
 
 def parse_users(data,userdata_per_page):
@@ -80,6 +88,8 @@ def parse_users(data,userdata_per_page):
 	domain = data.domain
 	validation = data.validation
 	api_key = data.api_key	
+
+	logger.debug(str(vars(data)))
 
 	# For every page, do some parsing.
 
@@ -95,6 +105,7 @@ def parse_users(data,userdata_per_page):
 			if 'com.linkedin.voyager.search.SearchProfile' in d['hitInfo'] and d['hitInfo']['com.linkedin.voyager.search.SearchProfile']['headless'] == False:
 				try:
 					industry = d['hitInfo']['com.linkedin.voyager.search.SearchProfile']['industry']
+					logger.debug(industry)
 				except:
 					industry = ""    
 
@@ -122,6 +133,8 @@ def parse_users(data,userdata_per_page):
 
 				name_data=[raw_firstname,raw_surname]
 
+				logger.debug(str(name_data))
+
 				name_scheme=naming_scheme.names(name_data)
 				firstname=name_scheme[0]
 				middlename=name_scheme[1]
@@ -136,6 +149,7 @@ def parse_users(data,userdata_per_page):
 					datapoint_1=d['hitInfo']['com.linkedin.voyager.search.SearchProfile']['miniProfile']['picture']['com.linkedin.common.VectorImage']['rootUrl']
 					datapoint_2=d['hitInfo']['com.linkedin.voyager.search.SearchProfile']['miniProfile']['picture']['com.linkedin.common.VectorImage']['artifacts'][2]['fileIdentifyingUrlPathSegment']
 					picture=datapoint_1+datapoint_2
+					logger.debug(picture)
 				except:
 					picture = None
 
