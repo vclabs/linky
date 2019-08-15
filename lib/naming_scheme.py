@@ -1,6 +1,18 @@
 from lib import logger
 import re
 
+# If any additional formats are added, add them into here.
+email_schemes={'firstname.surname': 'john.doe',
+	'firstnamesurname': 'johndoe',
+	'f.surname': 'j.doe',
+	'fsurname': 'jdoe',
+	'surname.firstname': 'doe.john',
+	'surnamefirstname': 'doejohn',
+	's.firstname': 'd.john',
+	'sfirstname': 'djohn',
+	'firstname.msurname':'john.jdoe'
+	}
+
 def names(name_data):
 	surname_split = name_data[1].split()
 
@@ -68,6 +80,8 @@ def emails(name_data,email_format,domain):
 		email=surnamefirstname(firstname,surname,domain)
 	elif 'sfirstname' in email_format:
 		email=sfirstname(firstname,surname,domain)
+	elif 'firstname.msurname' in email_format:
+		email=firstname_mdotsurname(firstname,middlename,surname,domain)
 	else:
 		logger.red('Unknown email scheme specified.')
 		quit()
@@ -111,3 +125,13 @@ def sfirstname(firstname,surname,domain):
 	email = surname+firstname+domain
 	return email.lower()
 
+
+def firstname_mdotsurname(firstname,middlename,surname,domain):
+	# John Jones Doe: john.jdoe
+	try:
+		middlename = middlename[0]
+	except:
+		middlename = ''
+	email = '%s.%s%s%s' % (firstname,middlename,surname,domain)
+
+	return email.lower()

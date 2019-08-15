@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from lib import logger, core, banner, data_structure
+from lib import logger, core, banner, data_structure, naming_scheme
 import argparse, os.path, json, datetime
 '''
 
@@ -24,11 +24,17 @@ parser.add_argument("-v", "--validate", metavar="", help="Validate email address
 parser.add_argument("-a", "--api", metavar="", help="API Key for Hunter API")
 parser.add_argument("--verbose", action="store_true", help="Verbosity of the output")
 parser.add_argument("--debug", action="store_true", help="Enable debugging, will spam.")
+mutually_exclusive.add_argument("--list-email-schemes", action="store_true", help="List available email schemes")
 mutually_exclusive.add_argument("--version", action="store_true",help="Print current version")
 args = parser.parse_args()
 
 if args.version:
 	banner.banner()
+	quit()
+
+if args.list_email_schemes:
+	for scheme,example in naming_scheme.email_schemes.items():
+		print('%s:%s' % (scheme, logger.BLUE(example)))
 	quit()
 
 # The most important part...
@@ -69,7 +75,7 @@ else:
 	keyword = args.keyword
 
 if args.format:
-	email_schemes=['firstname.surname','firstnamesurname','f.surname','fsurname','surname.firstname','surnamefirstname','s.firstname','sfirstname']
+	email_schemes = naming_scheme.email_schemes
 	email_format=args.format.lower()
 	if email_format not in email_schemes:
 		logger.red('Unknown email scheme specified, please see the available below:')
