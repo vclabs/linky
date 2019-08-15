@@ -6,12 +6,11 @@ styles_css=cur_dir+'/html/src/styles.css'
 materialize_js=cur_dir+'/html/src/materialize.js'
 
 def header(title):
-	head='\n'
+	head=''
 	head+='<!DOCTYPE html>\n'
 	head+='<html>\n'
 	head+='<head>\n'
 	head+='<meta charset="utf-8">\n'
-	head+='<link rel="shortcut icon" type="image/png" href="https://pbs.twimg.com/profile_images/1141728503123107840/keugQMAi_400x400.jpg"/>\n'
 	head+='<title>%s</title>\n' % title
 
 	with open(materialize_css,'r') as f:
@@ -21,7 +20,7 @@ def header(title):
 			for i in x:
 				if len(i) > 1:
 					head+=i+'\n'
-			head+='</style\n>'
+			head+='</style>\n'
 		except:
 			pass
 
@@ -40,18 +39,24 @@ def header(title):
 	head+='<body>\n'
 	return head
 
+def input_box():
+	return '<input id="search" type="text" placeholder="Search a user...">\n'
+
 def table_head(headers):
 	t=''
-	t+='<table class="striped">\n'
+	t+='<table class="striped" id="sort">\n'
 	t+='<thead>\n'
+	t+='<tr>\n'
 	for h in headers:
 		t+='<th>%s</th>\n' % h
 	t+='</tr>\n'
 	t+='</thead>\n'
-	t+='<tbody>\n'
+	t+='<tbody id="searchable">\n'
 	return t
 
 def table_entry(entry):
+	if entry == None:
+		entry = 'Failed to extract'
 	t='<td>%s</td>\n' % entry
 	return t
 

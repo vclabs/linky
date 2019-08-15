@@ -11,20 +11,20 @@ def validate(email,api_key):
 		r=requests.get(url)
 		status_code = r.status_code
 	except Exception as e:
-		logger.red('Unable to get %s' % url)
+		print(e)
 		quit()
 
 	try:
 		data=json.loads(r.content)
 	except Exception as e:
-		logger.red('Failed to load JSON from requests')
+		print(e)
 		quit()
 
 	if status_code == 429 or status_code == 401:
 		try:
 			result=data['errors'][0]['details']
 		except Exception as e:
-			logger.red('Failed to load JSON from errors')
+			print(e)
 			quit()
 
 		if 'exceeded' in result:
@@ -37,15 +37,15 @@ def validate(email,api_key):
 			result=data['data']['result']
 			score=data['data']['score']
 		except Exception as e:
-			logger.red('Unable to extract json for %s' % email)
+			print(e)
 			quit()
 
 		percent=str(score)+'%'
 
 		if score > 68:
-			logger.green('Validated %s at %s' % (logger.GREEN(email),logger.GREEN(percent)))
+			logger.verbose('Validated %s at %s' % (logger.GREEN(email),logger.GREEN(percent)))
 			return True
 		else:
 			return False
 	else:
-		logger.red('Got unexpected HTTP response' % logger.RED(str(status_code)))
+		logger.verbose('Got unexpected HTTP response' % logger.RED(str(status_code)))

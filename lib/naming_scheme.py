@@ -2,7 +2,6 @@ from lib import logger
 import re
 
 def names(name_data):
-
 	surname_split = name_data[1].split()
 
 	firstname = name_data[0]
