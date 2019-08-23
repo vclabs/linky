@@ -4,3 +4,4 @@ __pycache__
 *.json
 *.html
 cookie.txt
+job_role_count.json
