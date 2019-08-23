@@ -82,8 +82,50 @@ surnamefirstname:doejohn
 s.firstname:d.john
 sfirstname:djohn
 firstname.msurname:john.jdoe
-
 ```
+
 They can all be referenced in ```--format```, E.G:
 
 ***f.surname***: ```--format f.surname```
+
+
+Job Role Count
+==============
+
+By default, Linky will count the occurence of job roles and write it out to html. But, it will also do so with a standard json file. The structure is as seen below:
+
+```
+{
+  "Software Developer": 24,
+  "Systems Developer": 14,
+  "Senior Software Developer": 11,
+  "Project Manager": 10,
+  "System Developer": 9,
+  "Cyber Security Consultant": 7,
+  "Project Developer": 7,
+  "Programme Manager": 6,
+  "Software Architect": 6,
+  "Development Manager": 6
+}
+```
+
+This is particularly useful if the html is taking an age to run.
+
+Efficient usage
+===============
+
+1.  Run once the gain the initial data:
+   
+   ```python3 --cookie cookie.txt --company-id 1441 --domain google.com --output google_employees  --format 'firstname.surname'```
+
+2. Find the job role occurence
+
+   ```cat job_role_count.json|jq```
+
+3.  With the roles identified, use the keyword feature:
+
+   ```python3 --cookie cookie.txt --company-id 1441 --domain google.com --output google_employees  --format 'firstname.surname' --keyword developer```
+
+
+
+*Happy Stalking.*

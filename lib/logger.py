@@ -68,10 +68,17 @@ def write_out(users,data,job_role_count,filename):
 	if filename == None:
 		return
 	write_html(users,data,job_role_count,filename)
-	write_csv(users,data,job_role_count,filename)
+	write_csv(users,data,filename)
 	write_json(users,filename)
+	write_json_jrc(job_role_count)
 
-def write_csv(users,data,job_role_count,filename):
+def write_json_jrc(jrc):
+	filename = 'job_role_count.json'
+	with open(filename,'w') as f:
+		json.dump(jrc,f)
+
+
+def write_csv(users,data,filename):
 	validation = data.validation
 	filename=filename+'.csv'
 	if validation != None:

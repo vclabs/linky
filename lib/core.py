@@ -41,6 +41,9 @@ def run(data):
 
 	users=linkedin_scraper.get_users(data,pages,total_employees)
 
+	for user in users:
+		print(vars(user))
+
 	job_role_count=role_occurrence.count(users,total_employees)
 
 	logger.dump(users,validation)
