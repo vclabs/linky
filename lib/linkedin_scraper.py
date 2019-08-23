@@ -1,6 +1,11 @@
 #!/usr/bin/python3
 from lib import http, logger, naming_scheme, user_structure, o365_validation, hunter_validation
 import json
+from time import sleep
+
+def percentage(part, whole):
+  math =  100 * float(part)/float(whole)
+  return math
 
 def company_profile(cookie,company_id,keyword):
 	# This function requests the companies profile and returns the data
@@ -76,18 +81,19 @@ def get_users(data,pages,total_employees):
 		userdata_per_page.append(result)
 
 	# This part could do with threading
-	users = parse_users(data,userdata_per_page)
+	users = parse_users(data,userdata_per_page,total_employees)
 	logger.debug('Sending list of json objects to parse_users()')
 	return users
 
-def parse_users(data,userdata_per_page):
+def parse_users(data,userdata_per_page,total_employees):
 	cookie = data.cookie
 	company_id = data.company_id
 	email_format =  data.email_format
 	keyword = data.keyword
 	domain = data.domain
 	validation = data.validation
-	api_key = data.api_key	
+	api_key = data.api_key
+	validation_count = 0
 
 	logger.debug(str(vars(data)))
 
@@ -99,6 +105,11 @@ def parse_users(data,userdata_per_page):
 		domain='@'+domain
 
 	users = []
+
+	if validation:
+		print()
+		logger.yellow('Starting Validation')
+		sleep(3)
 
 	for user_data in userdata_per_page:
 		for d in user_data['elements'][0]['elements']: #This goes one user at a time
@@ -154,6 +165,7 @@ def parse_users(data,userdata_per_page):
 					picture = None
 
 				if validation != None:
+					validation_count+=1
 					if validation == 'o365':
 						validated=o365_validation.validate(email)
 					elif validation == 'hunter':
@@ -166,6 +178,13 @@ def parse_users(data,userdata_per_page):
 							quit()
 				else:
 					validated = False
+
+				if validation:
+					x = percentage(validation_count,total_employees)
+					if x % 10 == 0:
+						p = '{}%'.format(x)
+						logger.yellow('Validation: %s complete!' % p)
+
 
 				user=user_structure.User(profile_url,picture,firstname,middlename,surname,fullname,email,validated,current_role,current_company)
 				users.append(user)
