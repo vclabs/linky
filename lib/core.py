@@ -14,8 +14,6 @@ def run(data):
 
 	logger.debug(str(vars(data)))
 
-
-
 	profiles = linkedin_scraper.company_profile(cookie,company_id,keyword)
 	if profiles == None:
 		logger.red('Unable to extract data from LinkedIn')
@@ -39,7 +37,7 @@ def run(data):
 		logger.red('This method of enumeration can only extract 1000 users')
 		sleep(3)
 
-	users=linkedin_scraper.get_users(data,pages,total_employees)
+	users=linkedin_scraper.get_users(data,pages,total_employees,keyword)
 	job_role_count=role_occurrence.count(users,total_employees)
 
 	logger.dump(users,validation)

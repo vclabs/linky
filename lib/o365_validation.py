@@ -3,6 +3,7 @@ import requests
 
 def validate(email):
 	try:
+		# The password here doesnt really matter as the o365 link just requires anything, but its worthwhile having a common password in order to check for access at the same time
 		password='Summer2019'
 		url = 'https://outlook.office365.com/Microsoft-Server-ActiveSync'
 		headers = {"MS-ASProtocolVersion": "14.0"}
@@ -25,11 +26,11 @@ def validate(email):
 			return False
 
 		elif status == 403:
-			logger.verbose('Found credentials: %s:%s (2FA)' % (logger.GREEN(email),logger.GREEN(password)))
+			logger.green('Found credentials: %s:%s (2FA)' % (logger.GREEN(email),logger.GREEN(password)))
 			return [True,password]
 
 		elif status == 200:
-			logger.verbose('Found credentials: %s:%s' % (logger.GREEN(email),logger.GREEN(password)))
+			logger.green('Found credentials: %s:%s' % (logger.GREEN(email),logger.GREEN(password)))
 			return [True,password]
 		else:
 			logger.verbose('Got HTTP Status Response %s. Unexpected, skipping.' % logger.RED(str(status)))

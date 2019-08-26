@@ -21,7 +21,7 @@ def company_profile(cookie,company_id,keyword):
 		quit()
 	return data.text
 
-def get_users(data,pages,total_employees):
+def get_users(data,pages,total_employees,keyword):
 	#Grab the user data per page
 	cookie = data.cookie
 	company_id = data.company_id
@@ -62,7 +62,15 @@ def get_users(data,pages,total_employees):
 		if total_employees_to_fetch >= total_employees:
 			break
 
-		url="https://www.linkedin.com/voyager/api/search/cluster?count=40&guides=List(v->PEOPLE,facetCurrentCompany->%s)&origin=OTHER&q=guided&start=%s" % (company_id,total_employees_to_fetch)
+		# Loop over pages
+		if keyword == None:
+			# Experimental if statement, this request should work at this point(?)
+			logger.debug('No keyword set [getting user per page]')
+			url = "https://www.linkedin.com/voyager/api/search/cluster?count=40&guides=List(v->PEOPLE,facetCurrentCompany->%s)&origin=OTHER&q=guided&start=%s" % (company_id,total_employees_to_fetch)
+		else:	
+			# In theory, this will only grab users per page with the keyword
+			logger.debug('Using keyword %s' % logger.MAGENTA(keyword))
+			url = "https://www.linkedin.com/voyager/api/search/cluster?count=40&guides=List(v->PEOPLE,facetCurrentCompany->%s)&keywords=%s&origin=OTHER&q=guided&start=%s" % (company_id,keyword,total_employees_to_fetch)
 		logger.debug('Requesting %s from get_users()' % url)
 		logger.blue('Pulling from page %s' % logger.BLUE(page+1))
 			
@@ -109,7 +117,9 @@ def parse_users(data,userdata_per_page,total_employees):
 	if validation:
 		print()
 		logger.yellow('Starting Validation')
-		sleep(3)
+		for user_data in userdata_per_page:
+			for d in user_data['elements'][0]['elements']: #This goes one user at a time
+				validation_count += 1
 
 	for user_data in userdata_per_page:
 		for d in user_data['elements'][0]['elements']: #This goes one user at a time
@@ -165,7 +175,7 @@ def parse_users(data,userdata_per_page,total_employees):
 					picture = None
 
 				if validation != None:
-					validation_count+=1
+					validation_count-=1
 					if validation == 'o365':
 						validated=o365_validation.validate(email)
 					elif validation == 'hunter':
@@ -180,13 +190,9 @@ def parse_users(data,userdata_per_page,total_employees):
 					validated = False
 
 				if validation:
-					x = percentage(validation_count,total_employees)
-					if x % 10 == 0:
-						p = '{}%'.format(x)
-						logger.yellow('Validation: %s complete!' % p)
+					logger.verbose('%s emails remaining...' % logger.YELLOW(validation_count))
 
 
 				user=user_structure.User(profile_url,picture,firstname,middlename,surname,fullname,email,validated,current_role,current_company)
 				users.append(user)
-
 	return users
