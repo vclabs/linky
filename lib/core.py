@@ -19,6 +19,7 @@ def run(data):
 		logger.red('Unable to extract data from LinkedIn')
 		quit()
 	company_profile_json=json.loads(profiles)
+
 	try:
 		total_employees = company_profile_json['elements'][0]['total']
 	except:

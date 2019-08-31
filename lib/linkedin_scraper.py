@@ -8,6 +8,7 @@ def percentage(part, whole):
   return math
 
 def company_profile(cookie,company_id,keyword):
+	
 	# This function requests the companies profile and returns the data
 	if keyword == None:
 		url='https://www.linkedin.com/voyager/api/search/cluster?count=40&guides=List(v->PEOPLE,facetCurrentCompany->%s)&origin=OTHER&q=guided&start=0' % company_id

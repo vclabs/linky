@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from lib import logger, core, banner, data_structure, naming_scheme
 import argparse, os.path, json, datetime
+
 '''
 
 Linky is a LinkedIn Enumerator.
@@ -10,7 +11,6 @@ Inspired by @vysecurity, built my @mez0cc.
 '''
 
 start_time = datetime.datetime.now().replace(microsecond=0)
-
 
 parser = argparse.ArgumentParser(description="Yet another LinkedIn scraper.",epilog="Example: python3 linky.py --cookie cookie.txt --company-id 1441 --domain google.com --output google_employees --format 'firstname.surname'")
 mutually_exclusive = parser.add_mutually_exclusive_group()
@@ -22,17 +22,15 @@ parser.add_argument("-o", "--output", metavar="", help="File to output to: Write
 parser.add_argument("-f", "--format", metavar="", help="Format for email addresses")
 parser.add_argument("-v", "--validate", metavar="", help="Validate email addresses: O365/Hunter API")
 parser.add_argument("-a", "--api", metavar="", help="API Key for Hunter API")
-parser.add_argument("-j", "--json", metavar="", help="Run Linky from job_role_count.json")
 parser.add_argument("--verbose", action="store_true", help="Verbosity of the output")
 parser.add_argument("--debug", action="store_true", help="Enable debugging, will spam.")
 mutually_exclusive.add_argument("--list-email-schemes", action="store_true", help="List available email schemes")
 mutually_exclusive.add_argument("--version", action="store_true",help="Print current version")
 args = parser.parse_args()
 
+arguments = vars(args)
 
-x = vars(args)
-
-if not any(x.values()):
+if not any(arguments.values()):
 	parser.print_help()
 	quit()
 
