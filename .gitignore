@@ -5,3 +5,4 @@ __pycache__
 *.html
 cookie.txt
 job_role_count.json
+*.sh
