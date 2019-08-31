@@ -29,6 +29,13 @@ mutually_exclusive.add_argument("--list-email-schemes", action="store_true", hel
 mutually_exclusive.add_argument("--version", action="store_true",help="Print current version")
 args = parser.parse_args()
 
+
+x = vars(args)
+
+if not any(x.values()):
+	parser.print_help()
+	quit()
+
 if args.version:
 	banner.banner()
 	quit()

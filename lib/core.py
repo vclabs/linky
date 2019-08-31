@@ -19,7 +19,12 @@ def run(data):
 		logger.red('Unable to extract data from LinkedIn')
 		quit()
 	company_profile_json=json.loads(profiles)
-	total_employees = company_profile_json['elements'][0]['total']
+	try:
+		total_employees = company_profile_json['elements'][0]['total']
+	except:
+		logger.red('Failed to extract users, try generalising the keywords')
+		logger.red('If this problem persists, create a issue on GitHub!')
+		quit()
 	per_page=40 # Each response contains 40 profiles per page.
 	pages = int(total_employees / per_page) # Divide the amount of users by 40, this will give you the amount of pages
 	logger.debug('Per page: %s' % per_page)
