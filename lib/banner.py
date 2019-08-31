@@ -1,7 +1,7 @@
 from lib import logger
 import random
 
-VERSION='0.2.3 dev'
+VERSION='0.2.4 dev'
 
 def random_color(string):
 	colour_red = "\033[1;31m"
