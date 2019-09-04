@@ -179,6 +179,21 @@ def write_html(users,data,job_role_count,filename):
 		f.write('</table>\n')
 		f.write(html.footer())
 
+def valid_emails_only(users,filename):
+	blue('Here are all the validated users:')
+	if not filename.endswith('.txt'):
+		filename = filename+'.txt'
+	with open(filename,'w') as f:
+		for user in users:
+			if user.validated:
+				try:
+					valid = validated[0]
+					password = validated[1]
+					green('%s! %s:%s' % (GREEN('PWNED!'),GREEN(email),GREEN(password)))
+				except:
+					green('%s: %s' % (GREEN(user.email),GREEN(str(user.validated))))
+					f.write('%s\n' % (user.email))
+
 def dump(users,validation):
 	for user in users:
 		profile_url=user.profile_url

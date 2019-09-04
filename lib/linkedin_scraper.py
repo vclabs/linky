@@ -187,6 +187,8 @@ def parse_users(data,userdata_per_page,total_employees):
 						elif validated == 401:
 							logger.red('The API Key specified recieved an %s error.' % 'authentication')
 							quit()
+					else:
+						validated=False
 				else:
 					validated = False
 
@@ -196,4 +198,7 @@ def parse_users(data,userdata_per_page,total_employees):
 
 				user=user_structure.User(profile_url,picture,firstname,middlename,surname,fullname,email,validated,current_role,current_company)
 				users.append(user)
+	if validation:
+		logger.yellow('Validation finished!')
+		print()
 	return users

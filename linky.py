@@ -22,6 +22,7 @@ parser.add_argument("-o", "--output", metavar="", help="File to output to: Write
 parser.add_argument("-f", "--format", metavar="", help="Format for email addresses")
 parser.add_argument("-v", "--validate", metavar="", help="Validate email addresses: O365/Hunter API")
 parser.add_argument("-a", "--api", metavar="", help="API Key for Hunter API")
+parser.add_argument("--valid-emails-only", action="store_true", help="When you literally only want a txt of valid emails.")
 parser.add_argument("--verbose", action="store_true", help="Verbosity of the output")
 parser.add_argument("--debug", action="store_true", help="Enable debugging, will spam.")
 mutually_exclusive.add_argument("--list-email-schemes", action="store_true", help="List available email schemes")
@@ -37,6 +38,7 @@ if not any(arguments.values()):
 if args.version:
 	banner.banner()
 	quit()
+
 
 if args.list_email_schemes:
 	for scheme,example in naming_scheme.email_schemes.items():
@@ -118,7 +120,11 @@ else:
 	validation = None
 	api_key = None
 
-data = data_structure.Data(cookie,company_id,email_format,domain,filename,keyword,validation,api_key)
+valid_emails_only = args.valid_emails_only
+if valid_emails_only:
+	validation = 'o365'
+
+data = data_structure.Data(cookie,company_id,email_format,domain,filename,keyword,validation,api_key,valid_emails_only)
 
 logger.debug(str(vars(data)))
 
