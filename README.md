@@ -126,6 +126,15 @@ Efficient usage
 
    ```python3 --cookie cookie.txt --company-id 1441 --domain google.com --output google_employees  --format 'firstname.surname' --keyword developer```
 
+Dont need all the junk? Only need a list of valid emails?
+=========================================================
 
+The ```--valid-emails-only``` flag will perform the same level of enumeration. But, it will only output validated emails to a txt file. This also assumes ```o365``` validation.
+
+```python3 --cookie cookie.txt --company-id 1441 --domain google.com --output google_employees  --format 'firstname.surname' --keyword developer --valid-emails-only```
+
+From this command, a txt file will be created with nothing but emails that were found to be valid via o365.
+
+This is basically the TL;DR version of Linky.
 
 *Happy Stalking.*
