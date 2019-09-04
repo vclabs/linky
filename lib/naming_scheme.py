@@ -102,28 +102,43 @@ def firstnamesurname(firstname,surname,domain):
 	return email.lower()
 
 def fsurname(firstname,surname,domain):
-	firstname = firstname[0][0]
-	email = firstname+surname+domain
-	return email.lower()
+	try:
+		firstname = firstname[0][0]
+		email = firstname+surname+domain
+		return email.lower()
+	except Exception as e:
+		return 'error'
 
 
 def surname_dot_firstname(firstname,surname,domain):
-	email=surname+'.'+firstname+domain
-	return email.lower()
+	try:
+		email=surname+'.'+firstname+domain
+		return email.lower()
+	except:
+		return 'error'
 
 def s_dot_firstname(firstname,surname,domain):
-	surname = surname[0][0].strip()
-	email = surname+'.'+firstname+domain
-	return email.lower()
+	try:
+		surname = surname[0][0].strip()
+		email = surname+'.'+firstname+domain
+		return email.lower()
+	except:
+		return 'error'
 
 def surnamefirstname(firstname,surname,domain):
-	email = surname+firstname+domain
-	return email.lower()
+	try:
+		email = surname+firstname+domain
+		return email.lower()
+	except:
+		return 'error'
 
 def sfirstname(firstname,surname,domain):
-	surname = surname[0][0]
-	email = surname+firstname+domain
-	return email.lower()
+	try:
+		surname = surname[0][0]
+		email = surname+firstname+domain
+		return email.lower()
+	except:
+		return 'error'
 
 
 def firstname_mdotsurname(firstname,middlename,surname,domain):
