@@ -83,11 +83,13 @@ def get_users(data,pages,total_employees,keyword):
 		except Exception as e:
 			print(e)
 			quit()
-
-		people_on_this_page=people_on_this_page+len(result['elements'][0]['elements'])
-		if people_on_this_page > 0:
-			logger.green('Successfully pulled %s users' % logger.GREEN(str(people_on_this_page)))
-		userdata_per_page.append(result)
+		try:
+			people_on_this_page=people_on_this_page+len(result['elements'][0]['elements'])
+			if people_on_this_page > 0:
+				logger.green('Successfully pulled %s users' % logger.GREEN(str(people_on_this_page)))
+			userdata_per_page.append(result)
+		except:
+			continue
 
 	# This part could do with threading
 	users = parse_users(data,userdata_per_page,total_employees)
@@ -178,9 +180,9 @@ def parse_users(data,userdata_per_page,total_employees):
 				if validation != None:
 					validation_count-=1
 					if validation == 'o365':
-						validated=o365_validation.validate(email)
+						validated=o365_validation.validate(email) # multiprocess me
 					elif validation == 'hunter':
-						validated=hunter_validation.validate(email,api_key)
+						validated=hunter_validation.validate(email,api_key) # multiprocess me
 						if validated == 429:
 							logger.red('You have exceeded your hunter API Requests.')
 							quit()
