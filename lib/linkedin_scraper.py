@@ -184,17 +184,20 @@ def chunks(users, chunk_size):
 		chunk_size = 1
 	return [users[i:i+chunk_size] for i in range(0, len(users), chunk_size)]
 
-def validate(user_split,mode):
+def validate_o365(user_split):
 	users = []
 	for user in user_split:
 		email = user.email
-		if mode == '0365':
-			validated = o365_validation.validate(email)
-		elif mode 'hunter':
-			validated = hunter_validation.validate(email)
-		else:
-			logger.red('Something has gone terribly wrong with validation')
-			quit()
+		validated = o365_validation.validate(email)
+		user.validated = validated
+		users.append(user)
+	return users
+
+def validate_hunter(user_split):
+	users = []
+	for user in user_split:
+		email = user.email
+		validated = hunter_validation.validate(email)
 		user.validated = validated
 		users.append(user)
 	return users
@@ -207,8 +210,22 @@ def do_validation(users, processes,mode):
 
 		cleaned_users = []
 
-		with Pool(5) as p:
-			results = p.map(validate, slice,mode)
+		try:
+			with Pool(processes) as p:
+				if mode == 'o365':
+					results = p.map(validate_o365, slice)
+				elif mode == 'hunter':
+					results = p.map(validate_hunter, slice)
+				else:
+					logger.red('Something has gone terribly wrong with validation')
+					pool.close()
+					pool.join()
+					quit()
+		except KeyboardInterrupt:
+			logger.yellow('CTRL+C Detected!')
+			logger.yellow('Quting...')
+			quit()
+
 
 		for user_split in results:
 			for user in user_split:
@@ -216,5 +233,6 @@ def do_validation(users, processes,mode):
 
 		return users
 	except Exception as e:
-		print(e)
+		e = str(e)
+		print('Got error:'+logger.RED(e))
 		quit()

@@ -22,6 +22,7 @@ parser.add_argument("-o", "--output", metavar="", help="File to output to: Write
 parser.add_argument("-f", "--format", metavar="", help="Format for email addresses")
 parser.add_argument("-v", "--validate", metavar="", help="Validate email addresses: O365/Hunter API")
 parser.add_argument("-a", "--api", metavar="", help="API Key for Hunter API")
+parser.add_argument("-t", "--threads", metavar="", help="Amount of threads to use [default 5]")
 parser.add_argument("--valid-emails-only", action="store_true", help="When you literally only want a txt of valid emails.")
 parser.add_argument("--verbose", action="store_true", help="Verbosity of the output")
 parser.add_argument("--debug", action="store_true", help="Enable debugging, will spam.")
@@ -67,6 +68,11 @@ except:
 	logger.red('Please add the cookie to a file')
 	logger.debug('%s not valid' % args.cookie)
 	quit()
+
+if args.threads:
+	threads = args.threads
+else:
+	threads = 5
 
 company_id=args.company_id
 
@@ -124,7 +130,7 @@ valid_emails_only = args.valid_emails_only
 if valid_emails_only:
 	validation = 'o365'
 
-data = data_structure.Data(cookie,company_id,email_format,domain,filename,keyword,validation,api_key,valid_emails_only)
+data = data_structure.Data(cookie,company_id,email_format,domain,filename,keyword,validation,api_key,valid_emails_only,threads)
 
 logger.debug(str(vars(data)))
 
