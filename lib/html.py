@@ -4,6 +4,9 @@ cur_dir=os.path.dirname(os.path.abspath(__file__))
 materialize_css=cur_dir+'/html/src/materialize.css'
 styles_css=cur_dir+'/html/src/styles.css'
 materialize_js=cur_dir+'/html/src/materialize.js'
+datatable_js=cur_dir+'/html/src/DataTables.js'
+jquery_js=cur_dir+'/html/src/jquery.js'
+init_js=cur_dir+'/html/src/init.js'
 
 def header(title):
 	head=''
@@ -44,14 +47,14 @@ def input_box():
 
 def table_head(headers):
 	t=''
-	t+='<table class="striped" id="sort">\n'
+	t+='<table id="datatable" class="mdl-data-table" style="width:100%">\n'
 	t+='<thead>\n'
 	t+='<tr>\n'
 	for h in headers:
 		t+='<th>%s</th>\n' % h
 	t+='</tr>\n'
 	t+='</thead>\n'
-	t+='<tbody id="searchable">\n'
+	t+='<tbody>\n'
 	return t
 
 def table_entry(entry):
@@ -73,16 +76,20 @@ def table_picture(url,image):
 
 def footer():
 	foot=''
-	with open(materialize_js,'r') as f:
-		try:
-			x=f.readlines()
-			foot+='<script>\n'
-			for i in x:
-				if len(i) > 1:
-					foot+=i+'\n'
-			foot+='</script>\n'
-		except:
-			pass
+	foot += '<script src="%s"></script>' % jquery_js
+	foot += '<script src="%s"></script>' % materialize_js
+	foot += '<script src="%s"></script>' % datatable_js
+	foot += '<script src="%s"></script>' % init_js
+	# with open(materialize_js,'r') as f:
+	# 	try:
+	# 		x=f.readlines()
+	# 		foot+='<script>\n'
+	# 		for i in x:
+	# 			if len(i) > 1:
+	# 				foot+=i+'\n'
+	# 		foot+='</script>\n'
+	# 	except:
+	# 		pass
 
 	foot+='</body>\n'
 	foot+='</html>\n'

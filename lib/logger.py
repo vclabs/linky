@@ -128,7 +128,7 @@ def write_html(users,data,job_role_count,filename):
 			headers=['picture','fullname','firstname','middlename','surname','email','current role','current company']
 		f.write(html.h3_span(['User Count',user_counter]))
 		f.write(html.p('Click the users image to view their LinkedIn!'))
-		f.write(html.input_box())
+		# f.write(html.input_box())
 		f.write(html.table_head(headers))
 		for user in users:
 			fullname=user.fullname

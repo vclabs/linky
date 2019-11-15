@@ -47,7 +47,7 @@ def run(data):
 
 	users=linkedin_scraper.get_users(data,pages,total_employees,keyword)
 
-	if len(validation) != 0:
+	if validation is not None:
 		users = linkedin_scraper.do_validation(users,threads,validation)
 
 	job_role_count=role_occurrence.count(users,total_employees)
