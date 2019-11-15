@@ -168,7 +168,8 @@ def write_html(users,data,job_role_count,filename):
 		f.write('</tbody>\n')
 		f.write('</table>\n')
 		f.write(html.h3('Top roles'))
-		f.write(html.p('The following table shows the most common roles within the designated organisation.\nRunning this tool again with these top 3 results as keywords will result in more specific data as the api data extraction only pulls 1000 results.'))
+		f.write(html.p('The following table shows the most common roles within the designated organisation.'))
+		f.write(html.p('Running this tool again with these top 3 results as keywords will result in more specific data as the api data extraction only pulls 1000 results.'))
 		f.write(html.table_head(['Role','Count']))
 		for role,count in job_role_count.items():
 			f.write('<tr>\n')
