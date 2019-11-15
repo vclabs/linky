@@ -1,7 +1,8 @@
 from lib import logger
 import random
 
-VERSION='0.2.5 dev'
+VERSION='0.2.7 dev'
+CODENAME='Tables and Chairs'
 
 def random_color(string):
 	colour_red = "\033[1;31m"
@@ -27,7 +28,7 @@ def banner():
 	random_color('███▌    ▄ ███  ███   ███   ███ ▀███▄ ███   ███ ')
 	random_color('█████▄▄██ █▀    ▀█   █▀    ███   ▀█▀  ▀█████▀  ')
 	random_color('▀                          ▀                   ')
-	random_color('\t<<<Yet another LinkedIn scraper>>>')
+	random_color('\tCodename: %s' % CODENAME)
 	print('')
 
 def random_color_end(string):

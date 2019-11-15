@@ -2,3 +2,15 @@ img{
 	width:300px;
 	height: auto;
 }
+
+a{
+	cursor: pointer;
+}
+
+.datatable_info{
+	padding-right: 50px;
+}
+
+#datatable_info{
+	padding-right: 50px;
+}
