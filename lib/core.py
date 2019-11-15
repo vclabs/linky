@@ -12,6 +12,10 @@ def run(data):
 	api_key = data.api_key
 	filename = data.filename
 	valid_emails_only = data.valid_emails_only
+	processes = 5
+
+	print(validation)
+	quit()
 
 	logger.debug(str(vars(data)))
 
@@ -45,6 +49,11 @@ def run(data):
 		sleep(3)
 
 	users=linkedin_scraper.get_users(data,pages,total_employees,keyword)
+
+	if len(validation) != 0:
+		mode = validation
+		users = linkedin_scraper.do_validation(users,processes,mode)
+
 	job_role_count=role_occurrence.count(users,total_employees)
 
 	if valid_emails_only:

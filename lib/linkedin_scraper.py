@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from lib import http, logger, naming_scheme, user_structure, o365_validation, hunter_validation
 import json
+from multiprocessing import Pool
 from time import sleep
 
 def percentage(part, whole):
@@ -116,14 +117,6 @@ def parse_users(data,userdata_per_page,total_employees):
 		domain='@'+domain
 
 	users = []
-
-	if validation:
-		print()
-		logger.yellow('Starting Validation')
-		for user_data in userdata_per_page:
-			for d in user_data['elements'][0]['elements']: #This goes one user at a time
-				validation_count += 1
-
 	for user_data in userdata_per_page:
 		for d in user_data['elements'][0]['elements']: #This goes one user at a time
 			if 'com.linkedin.voyager.search.SearchProfile' in d['hitInfo'] and d['hitInfo']['com.linkedin.voyager.search.SearchProfile']['headless'] == False:
@@ -177,30 +170,51 @@ def parse_users(data,userdata_per_page,total_employees):
 				except:
 					picture = None
 
-				if validation != None:
-					validation_count-=1
-					if validation == 'o365':
-						validated=o365_validation.validate(email) # multiprocess me
-					elif validation == 'hunter':
-						validated=hunter_validation.validate(email,api_key) # multiprocess me
-						if validated == 429:
-							logger.red('You have exceeded your hunter API Requests.')
-							quit()
-						elif validated == 401:
-							logger.red('The API Key specified recieved an %s error.' % 'authentication')
-							quit()
-					else:
-						validated=False
-				else:
+				if validation == None:
 					validated = False
-
-				if validation:
-					logger.verbose('%s emails remaining...' % logger.YELLOW(validation_count))
-
-
+				else:
+					validated = True
 				user=user_structure.User(profile_url,picture,firstname,middlename,surname,fullname,email,validated,current_role,current_company)
 				users.append(user)
-	if validation:
-		logger.yellow('Validation finished!')
-		print()
 	return users
+
+# split a list into evenly sized chunks
+def chunks(users, chunk_size):
+	if chunk_size == 0:
+		chunk_size = 1
+	return [users[i:i+chunk_size] for i in range(0, len(users), chunk_size)]
+
+def validate(user_split,mode):
+	users = []
+	for user in user_split:
+		email = user.email
+		if mode == '0365':
+			validated = o365_validation.validate(email)
+		elif mode 'hunter':
+			validated = hunter_validation.validate(email)
+		else:
+			logger.red('Something has gone terribly wrong with validation')
+			quit()
+		user.validated = validated
+		users.append(user)
+	return users
+
+def do_validation(users, processes,mode):
+	try:
+		total = len(users) # Get the amount of hosts
+		chunk_size = int(total / processes) # divide it by the amount of processes
+		slice = chunks(users, chunk_size) # evenly cut up the list
+
+		cleaned_users = []
+
+		with Pool(5) as p:
+			results = p.map(validate, slice,mode)
+
+		for user_split in results:
+			for user in user_split:
+				cleaned_users.append(user)
+
+		return users
+	except Exception as e:
+		print(e)
+		quit()

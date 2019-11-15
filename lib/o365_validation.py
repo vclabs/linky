@@ -18,7 +18,7 @@ def validate(email):
 			quit()
 
 		if status == 401:
-			logger.verbose('Successfully validated %s' % logger.GREEN(email))
+			logger.green('Successfully validated %s' % logger.GREEN(email))
 			return True
 
 		elif status == 404:
