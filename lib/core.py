@@ -1,4 +1,4 @@
-from lib import logger, linkedin_scraper, role_occurrence
+from lib import logger, linkedin_scraper, role_occurrence, o365_validation
 from time import sleep
 import json
 
@@ -47,14 +47,18 @@ def run(data):
 
 	users=linkedin_scraper.get_users(data,pages,total_employees,keyword)
 
+	print()
+
 	if validation is not None:
-		users = linkedin_scraper.do_validation(users,threads,validation)
+		if o365_validation.verify_o365(domain)[domain]:
+			logger.yellow('Running through email addresses...')
+			users = linkedin_scraper.do_validation(users,threads,validation)
+			print()
 
 	job_role_count=role_occurrence.count(users,total_employees)
 
 	if valid_emails_only:
 		logger.valid_emails_only(users,filename)
-
 	else:
 		logger.dump(users,validation)
 		logger.write_out(users,data,job_role_count,filename)

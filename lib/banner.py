@@ -1,8 +1,8 @@
 from lib import logger
 import random
 
-VERSION='0.2.7 dev'
-CODENAME='Tables and Chairs'
+VERSION='0.2.8 dev'
+CODENAME='UhOh365'
 
 def random_color(string):
 	colour_red = "\033[1;31m"

