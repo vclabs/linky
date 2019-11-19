@@ -43,6 +43,7 @@ def run(data):
 
 	if total_employees > 1000:
 		logger.red('This method of enumeration can only extract 1000 users')
+		print()
 		sleep(3)
 
 	users=linkedin_scraper.get_users(data,pages,total_employees,keyword)
