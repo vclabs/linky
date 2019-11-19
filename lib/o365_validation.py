@@ -35,7 +35,7 @@ def verify_o365(domain):
 		else:
 			logger.red('It doesnt look like %s is using %s' % (logger.RED(domain),logger.RED('Office365')))
 			domain_is_o365[domain] = False
-			quit()
+			return domain_is_o365
 	except Exception as e:
 		logger.red(str(e))
 		domain_is_o365[domain] = False
