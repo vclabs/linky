@@ -13,12 +13,6 @@ Linky is a *another* LinkedIn scraper. Inspired by [vysecurity](https://twitter.
 
 Currently, this method of extracting data from LinkedIn is limited to 1000 users at a time. So, Linky's HTML output has a small table at the bottom of the page which calculates the top 5 most common occupations that occur. This way, if the company has a weird naming scheme for devs, then Linky should be able to spot it and report it back. With these new found data points, the `--keywords` flag can be used to attempt to filter the output.
 
-I will open to issues for the new features I'm working on implementing:
-
-1. [Bypassing the 1000 limit](https://github.com/mez0cc/linky/issues/1)
-
-2. [Additional mode to read and extract technical details from users LinkedIn bios](https://github.com/mez0cc/linky/issues/2)
-
 ***
 
 Installing
@@ -31,8 +25,9 @@ Help Page
 ========
 
 ```
-usage: linky.py [-h] [-c] [-i] [-k] [-d] [-o] [-f] [-v] [-a] [--verbose]
-                [--debug] [--list-email-schemes | --version]
+usage: linky.py [-h] [-c] [-i] [-k] [-d] [-o] [-f] [-v] [-a] [-t]
+                [--valid-emails-only] [--verbose] [--debug]
+                [--list-email-schemes | --version]
 
 Yet another LinkedIn scraper.
 
@@ -46,6 +41,8 @@ optional arguments:
   -f , --format         Format for email addresses
   -v , --validate       Validate email addresses: O365/Hunter API
   -a , --api            API Key for Hunter API
+  -t , --threads        Amount of threads to use [default 5]
+  --valid-emails-only   When you literally only want a txt of valid emails.
   --verbose             Verbosity of the output
   --debug               Enable debugging, will spam.
   --list-email-schemes  List available email schemes
@@ -53,7 +50,6 @@ optional arguments:
 
 Example: python3 linky.py --cookie cookie.txt --company-id 1441 --domain
 google.com --output google_employees --format 'firstname.surname'
-
 ```
 
 Usage
@@ -109,8 +105,6 @@ By default, Linky will count the occurence of job roles and write it out to html
 }
 ```
 
-This is particularly useful if the html is taking an age to run.
-
 Efficient usage
 ===============
 
@@ -126,8 +120,8 @@ Efficient usage
 
    ```python3 --cookie cookie.txt --company-id 1441 --domain google.com --output google_employees  --format 'firstname.surname' --keyword developer```
 
-Dont need all the junk? Only need a list of valid emails?
-=========================================================
+Only print a list of validated email addresses
+==============================================
 
 The ```--valid-emails-only``` flag will perform the same level of enumeration. But, it will only output validated emails to a txt file. This also assumes ```o365``` validation.
 
