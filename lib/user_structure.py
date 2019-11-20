@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 class User:
 	def __init__(self,profile_url,picture,firstname,middlename,surname,fullname,email,validated,current_role,current_company):

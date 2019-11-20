@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
+
 from collections import Counter
-
-
 
 def count(users,total_employees):
 

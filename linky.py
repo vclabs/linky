@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from lib import logger, core, banner, data_structure, naming_scheme
 import argparse, os.path, json, datetime
 

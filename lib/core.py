@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from lib import logger, linkedin_scraper, role_occurrence, o365_validation
 from time import sleep
 import json

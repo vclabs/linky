@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from lib import logger
 import requests,random,string
 from requests.packages.urllib3.exceptions import InsecureRequestWarning

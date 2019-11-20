@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 class Data:
 	def __init__(self,cookie,company_id,email_format,domain,filename,keyword,validation,api_key,valid_emails_only,threads):

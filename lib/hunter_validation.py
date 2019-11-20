@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 import requests,  json, csv, argparse
 from time import  sleep

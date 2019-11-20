@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from lib import http, logger, naming_scheme, user_structure, o365_validation, hunter_validation
 import json
 from multiprocessing import Pool

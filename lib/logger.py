@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from time import gmtime, strftime
 from lib import html
 import pandas as pd
