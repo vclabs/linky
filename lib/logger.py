@@ -212,17 +212,12 @@ def dump(users,validation):
 		if validation == None:
 			green('%s (%s): %s at %s' % (GREEN(fullname),email,current_role,GREEN(current_company)))
 		else:
-			try:
-				valid = validated[0]
-				password = validated[1]
-				green('[%s:%s] %s (%s): %s at %s' % (GREEN('PWNED!'),GREEN(password),GREEN(fullname),email,current_role,GREEN(current_company)))
-			except:
-				if validated == True:
-					green('%s (%s: [%s]): %s at %s' % (GREEN(fullname),email,GREEN(str(validated)),current_role,GREEN(current_company)))
-				elif validated == False:
-					green('%s (%s: [%s]): %s at %s' % (GREEN(fullname),email,RED(str(validated)),current_role,GREEN(current_company)))
-				elif validated == None:
-					green('%s (%s: [%s]): %s at %s' % (GREEN(fullname),email,RED(str(validated)),current_role,GREEN(current_company)))
+			if validated == True:
+				green('%s (%s: [%s]): %s at %s' % (BLUE(fullname),email,GREEN(str(validated)),current_role,BLUE(current_company)))
+			elif validated == False:
+				green('%s (%s: [%s]): %s at %s' % (BLUE(fullname),email,RED(str(validated)),current_role,BLUE(current_company)))
+			elif validated == None:
+				green('%s (%s: [%s]): %s at %s' % (BLUE(fullname),email,RED(str(validated)),current_role,BLUE(current_company)))
 
 
 

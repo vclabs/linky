@@ -232,8 +232,7 @@ def do_validation(users, processes,mode):
 		for user_split in results:
 			for user in user_split:
 				cleaned_users.append(user)
-
-		return users
+		return cleaned_users
 	except Exception as e:
 		e = str(e)
 		print('Got error:'+logger.RED(e))
