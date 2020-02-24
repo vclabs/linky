@@ -1,9 +1,9 @@
 <p align="center">
   <img alt="Linky" src="https://i.imgur.com/ozdWSxP.jpg" height="140" />
   <p align="center">
-    <a href="https://github.com/mez0cc/linky/releases/latest"><img alt="Release" src="https://img.shields.io/github/release/mez0cc/linky.svg?style=flat-square"></a>
-    <a href="https://github.com/mez0cc/linky/blob/master/LICENSE"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"></a>
-    <a href="https://github.com/mez0cc/linky/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mez0cc/linky.svg?style=flat-square"></a>
+    <a href="https://github.com/mez-0/linky/releases/latest"><img alt="Release" src="https://img.shields.io/github/release/mez-0/linky.svg?style=flat-square"></a>
+    <a href="https://github.com/mez-0/linky/blob/master/LICENSE"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"></a>
+    <a href="https://github.com/mez-0/linky/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/mez-0/linky.svg?style=flat-square"></a>
     </p>
 </p>
 
