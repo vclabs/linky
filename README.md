@@ -14,6 +14,11 @@ Linky is a *another* LinkedIn scraper. Inspired by [vysecurity](https://twitter.
 Currently, this method of extracting data from LinkedIn is limited to 1000 users at a time. So, Linky's HTML output has a small table at the bottom of the page which calculates the top 5 most common occupations that occur. This way, if the company has a weird naming scheme for devs, then Linky should be able to spot it and report it back. With these new found data points, the `--keywords` flag can be used to attempt to filter the output.
 
 ***
+Note
+====
+This is no longer maintained. Afaik, the validation method via o365 has been patched. I also removed the blog post a while ago detailing this, so the `cookie.txt` referenced in this README is the `li_at` cookie on LinkedIn.
+
+***
 
 Installing
 ==========
