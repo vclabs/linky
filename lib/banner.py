@@ -23,7 +23,7 @@ def banner():
 	print('')
 	random_color(' ▄█        ▄█  ███▄▄▄▄      ▄█   ▄█▄ ▄██   ▄   ')
 	random_color('███       ███  ███▀▀▀██▄   ███ ▄███▀ ███   ██▄  Title: Linky.py')
-	random_color('███       ███▌ ███   ███   ███▐██▀   ███▄▄▄███  Author: @mez0cc')
+	random_color('███       ███▌ ███   ███   ███▐██▀   ███▄▄▄███  Author: Virtual Cyber Labs')
 	random_color('███       ███▌ ███   ███  ▄█████▀    ▀▀▀▀▀▀███  Descriptions: Enumerates users from LinkedIn')
 	random_color('███       ███▌ ███   ███ ▀▀█████▄    ▄██   ███  Version: v%s' % VERSION)
 	random_color('███       ███  ███   ███   ███▐██▄   ███   ███ ')
