@@ -8,7 +8,7 @@ import argparse, os.path, json, datetime
 
 Linky is a LinkedIn Enumerator.
 
-Inspired by @vysecurity, built my @mez0cc.
+By Virtual Cyber Labs.
 
 '''
 
